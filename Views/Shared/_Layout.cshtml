@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using WaterHeaterTest.Data
+@inject SignInManager<LoginUser> SignInManager
+@inject UserManager<LoginUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WaterHeaterTest</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.FindByNameAsync(User.Identity.Name);
+        var userFullname = user.Ime + " " + user.Prezime;
+
+        <header>
+            <nav class="flex">
+                <a asp-controller="Home" asp-action="Index">
+                    <img src="~/img/zebracon_logo.png" class="zebracon_logo" />
+                </a>
+                <div class="space"></div>
+                <img class="user" src="~/img/user.png" title="Korisnik" />
+                <div class="header-logout">
+                    <ul class="podmeni">
+                        <li>@userFullname</li>
+                    </ul>
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="sacekajte">Odjavi se</button>
+                    </form>
+                </div>
+            </nav>
+        </header>
+        <div class="sredina">
+            <div class="sredina-levo">
+            </div>
+            <div class="sredina-sirina">
+                @RenderBody()
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="sredina">
+            <div class="sredina-levo">
+            </div>
+            <div class="sredina-sirina">
+                @RenderBody()
+            </div>
+        </div>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/animation.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

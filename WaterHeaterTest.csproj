@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-WaterHeaterTest-19EC439D-55CC-43A5-8142-FEA1209EF797</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20230208111659_ElektroIspravnost2.cs" />
+    <Compile Remove="Migrations\20230208111659_ElektroIspravnost2.Designer.cs" />
+    <Compile Remove="Migrations\20230208132944_VizuelnaIspravnost_model_klase.cs" />
+    <Compile Remove="Migrations\20230208132944_VizuelnaIspravnost_model_klase.Designer.cs" />
+    <Compile Remove="Migrations\20230208142438_FK_AgrVizuelnaGreskaOpis_VizuelnaGreska.cs" />
+    <Compile Remove="Migrations\20230208142438_FK_AgrVizuelnaGreskaOpis_VizuelnaGreska.Designer.cs" />
+    <Compile Remove="Migrations\20230208160745_FK_Sif_VizuelnaGreska_AspNetUsers.cs" />
+    <Compile Remove="Migrations\20230208160745_FK_Sif_VizuelnaGreska_AspNetUsers.Designer.cs" />
+    <Compile Remove="Migrations\20230208162053_FK_AktElektroispravnost_AspNetUsers.cs" />
+    <Compile Remove="Migrations\20230208162053_FK_AktElektroispravnost_AspNetUsers.Designer.cs" />
+    <Compile Remove="Migrations\20230227082510_Added_SifArtikal_Model.cs" />
+    <Compile Remove="Migrations\20230227082510_Added_SifArtikal_Model.Designer.cs" />
+    <Compile Remove="Migrations\20230227094531_Remove_SifArtikal_Model.cs" />
+    <Compile Remove="Migrations\20230227094531_Remove_SifArtikal_Model.Designer.cs" />
+    <Compile Remove="Migrations\20230227111137_SifElektropult_Model.cs" />
+    <Compile Remove="Migrations\20230227111137_SifElektropult_Model.Designer.cs" />
+    <Compile Remove="Migrations\20230227112127_SifArtikal_Model.cs" />
+    <Compile Remove="Migrations\20230227112127_SifArtikal_Model.Designer.cs" />
+    <Compile Remove="Migrations\20230228095039_Agr_AktElektroispravnost_SifElektropult_Model.cs" />
+    <Compile Remove="Migrations\20230228095039_Agr_AktElektroispravnost_SifElektropult_Model.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="node_modules\webcam-easy\dist\webcam-easy.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.32" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.32" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.32" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+  </ItemGroup>
+
+</Project>

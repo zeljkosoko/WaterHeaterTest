@@ -1,0 +1,112 @@
+﻿@model dynamic
+
+<div class="logovanje">
+    <form id="confirmForm" method="post">
+        <input id="barcode" class="valid barcode" name="bc" placeholder="UNESITE BARKOD BOJLERA.." required autofocus />
+        <button type="button" class="loguj-se">
+            Potvrdi
+        </button>
+    </form>
+</div>
+<div class="logovanje poruka nije-vidljiva-poruka">
+    <form class="flex form-u-izvestaju margina-leva mt-5 pb-4" asp-action="TestSubmitNotOK" method="post">
+        <input type="hidden" id="barCode" name="barCode" class="barCode" value="" />
+        <div class="row">
+            <input class="btn btn-primary okButton text-center" type="button" value="OK" />
+        </div>
+        <div class="row">
+            <input class="btn btn-danger notOkButton text-center" type="submit" value="NOT OK" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        function ShowConfirmForm(serial) {
+            $(".poruka").removeClass("nije-vidljiva-poruka");
+            $(".barCode").val(serial);
+        }
+
+        $(document).ready(function () {
+
+            const bc = $("#barcode");
+            if (bc.val() != "") {
+                bc.val("");
+            }
+
+            $(".loguj-se").click(function () {
+
+                confirmForm = {
+                    serialNumber: bc.val()
+                };
+
+                if (confirmForm.serialNumber == "") {
+                    $("#confirmForm").after('<p class="rezultat"><span>Nema barkoda</span></p>');
+                    setTimeout(function () {
+                        $(".rezultat").remove();
+                    }, 2000);
+                }
+                else {
+
+                    $.ajax({
+                        url: '@Url.Action("SerijskiBrojExists","VisualCorrectness")',
+                        data: confirmForm,
+                        type: 'POST',
+                        dataType: 'json'
+                    })
+                        .done(function (result) {
+
+                            if (result == "true") {
+                                ShowConfirmForm(confirmForm.serialNumber);
+                            }
+                            else {
+                                $("#confirmForm").after('<p class="rezultat"><span>Nije bio na elektro testu/ prošao vizuelni test</span></p>');
+                                setTimeout(function () {
+                                    $(".rezultat").remove();
+                                }, 2000);
+
+                                if (bc.val() != "") {
+                                    bc.val("");
+                                }
+                            }
+                        });
+                }
+            });
+
+            $(".okButton").click(function () {
+
+                var formD = {
+                    barcodeForwarded: $(".barCode").val()
+                };
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("TestSubmitOK","VisualCorrectness")',
+                        data: formD,
+                        dataType: "json"
+                    })
+                        .done(function (result) {
+
+                            $(".poruka").addClass("nije-vidljiva-poruka");
+                            if (bc.val() != "") {
+                                bc.val("");
+                            }
+
+                            if (result != "Uspešno sačuvan test.") {
+                                $("#confirmForm").after(`<p class="rezultat"><span>${result}</span></p>`);
+                                setTimeout(function () {
+                                    $(".rezultat").remove();
+                                }, 2000);
+                            }
+                    })
+
+            });
+
+        });
+
+    </script>
+}
+

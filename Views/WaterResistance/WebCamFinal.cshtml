@@ -1,0 +1,63 @@
+﻿@model dynamic
+<div class="logovanje">
+    <form asp-action="ProblemDetailsSubmit" method="post" class="d-flex flex-wrap flex-column p-3">
+        <input type="hidden" id="serijskiBroj" class="serijskiBroj" name="serijskiBroj" value="@Model.idSerijskiBroj" />
+        <input type="hidden" id="sveSlike" name="sveSlike" />
+
+        <select class="idVrstaProblema mb-1" id="idVrstaProblema" name="idVrstaProblema">
+            @foreach (var item in Model.vrsteProblema)
+            {
+                <option value="@item.GetType().GetProperty("Id").GetValue(item)">
+                    @item.GetType().GetProperty("Value").GetValue(item)
+                </option>
+            }
+        </select>
+        <textarea placeholder="Opis.." class="opis mb-1" id="opis" style="resize:none;" name="opis"></textarea>
+        @* hidden camera div *@
+        <div id="LiveCamera" class="row" style="display:none;"></div>
+        @* result div *@
+        <div id="results" class="d-flex flex-wrap flex-row justify-content-start mb-1"></div>
+        <input type="button" class="btn btn-primary slikajBtn mb-1" value="SLIKAJ" onClick="CaptureSnapshot()">
+        <input type="submit" id="detaljiPotvrdi" value="POTVRDI" class="btn btn-danger" />
+        <p class="create-ticket-result text-center"><span>@ViewBag.Message</span></p>
+    </form>
+</div>
+
+<!-- Include the Webcam.js JavaScript Library -->
+<script src="~/webcamjs/webcam.js"></script>
+<!-- Configure web cam settings -->
+<script language="JavaScript">
+    Webcam.set({
+        width: 160,
+        height: 120,
+        image_format: 'png',
+        jpeg_quality: 100
+    });
+    Webcam.attach('#LiveCamera');
+</script>
+
+<!-- Javascript code to capture the snapshot and displaying it in the screen -->
+<script language="JavaScript">
+    function CaptureSnapshot() {
+        var counter = 0, pictures = [];
+
+        Webcam.snap(function (data) {
+
+            document.getElementById('results').innerHTML +=
+                        '<img id="imagePrev" src="' + data + ' " style="width:140px;height:120px;margin-right:5px;margin-top:5px;"/>';
+            var currentpictureNode = document.querySelectorAll("#imagePrev")[counter];
+            var picValue = currentpictureNode.getAttribute("src");
+            pictures.push("slika" + picValue); //added "slika" for splitting whole image string into particular image strings
+            $("#sveSlike").val(pictures);
+            counter++;
+            if (counter == 3) {
+                $(".slikajBtn").prop("disabled", "true");
+            }
+            //Webcam.upload(data,
+            //    '/WebCam/CaptureImage',
+            //    function (code, text) {
+            //        alert('Snapshot/Image captured successfully...');
+            //    });
+        });
+    }
+</script>

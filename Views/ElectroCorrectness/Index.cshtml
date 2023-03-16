@@ -1,0 +1,110 @@
+﻿@model dynamic
+
+<div class="logovanje epultForm">
+    <form id="epultForm" method="post">
+        <input id="epult" class="valid epult" name="epult" placeholder="UNESITE ŠIFRU PULTA.." required autofocus />
+        <button id="epultSubmit" type="button" class="loguj-se">Potvrdi</button>
+    </form>
+</div>
+<div class="logovanje barcodeForm nije-vidljiv">
+    <form id="confirmForm" method="post">
+        <input id="epCode" class="epCode" type="hidden" />
+        <input id="barcode" class="valid barcode" placeholder="UNESITE BARKOD BOJLERA.." required autofocus />
+        <button id="barcodeSubmit" type="button" class="loguj-se">
+            Potvrdi
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+
+    $(document).ready(function () {
+
+            var ep = $("#epult");
+            if (ep.val() != "") {
+                ep.val("");
+            }
+            var bc = $("#barcode");
+            if (bc.val() != "") {
+                bc.val("");
+            }
+
+            $("#epultSubmit").click(function () {
+                formEpult = {
+                    epult: ep.val()
+                };
+
+                if (formEpult.epult == "") {
+                    $("#epultForm").after('<p class="rezultat"><span>Nema barkoda</span></p>');
+                    setTimeout(function () {
+                        $(".rezultat").remove();
+                    }, 2000);
+                }
+                else {
+                    $.ajax({
+                        url: '@Url.Action("GetElectropultId","ElectroCorrectness")',
+                        type: "POST",
+                        data: formEpult,
+                        dataType: "json"
+                    })
+                        .done(function (result) {
+                            if (result != "Ne postoji pult sa takvom šifrom.") {
+                                $(".epCode").val(result);
+                                $(".epultForm").addClass("nije-vidljiv");
+                                $(".barcodeForm").removeClass("nije-vidljiv");
+                            }
+                            else {
+                                $("#epultForm").after(`<p class="rezultat"><span>${result}</span></p>`);
+                                setTimeout(function () {
+                                    $(".rezultat").remove();
+                                }, 2000);
+                            }
+                        });
+                }
+            });
+
+            $("#barcodeSubmit").click(function () {
+
+                var formD = {
+                    serialNo: $("#barcode").val(),
+                    epCode: $(".epCode").val()
+                };
+
+                if (formD.serialNo == "") {
+                    $("#confirmForm").after('<p class="rezultat"><span>Nema barkoda</span></p>');
+                    setTimeout(function () {
+                        $(".rezultat").remove();
+                    }, 2000);
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("CheckCorrectness","ElectroCorrectness")',
+                        data: formD,
+                        dataType: "json"
+                        })
+                        .done(function (result) {
+
+                            $(".poruka").addClass("nije-vidljiva-poruka");
+                            if (bc.val() != "") {
+                                bc.val("");
+                            }
+                            $("#confirmForm").after(`<p class="rezultat"><span>${result}</span></p>`);
+
+                            setTimeout(function () {
+                                $(".rezultat").remove();
+                            }, 2000);
+                        })
+                }
+
+
+            });
+
+        });
+
+</script>
+}
+

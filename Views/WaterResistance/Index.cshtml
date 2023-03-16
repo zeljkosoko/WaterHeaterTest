@@ -1,0 +1,109 @@
+﻿@model dynamic
+
+<div class="logovanje">
+    <form id="confirmForm" method="post">
+        <input id="barcode" class="valid barcode" placeholder="UNESITE BARKOD KOTLA.." required autofocus />
+        <button type="button" class="loguj-se">
+            Potvrdi
+        </button>
+    </form>
+</div>
+<div class="logovanje poruka nije-vidljiva-poruka">
+    <form class="flex form-u-izvestaju margina-leva mt-5 pb-4" asp-action="TestSubmitNotOK" method="post">
+        <input type="hidden" id="barCode" name="barCode" class="barCode" value="" />
+        <div class="row">
+            <input class="btn btn-primary okButton text-center" type="button" value="OK" />
+        </div>
+        <div class="row">
+            <input class="btn btn-danger notOkButton text-center" type="submit" value="NOT OK" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+
+    //prikazi dialog form i prosledi joj barkod
+    function ShowDialogForm(barcode) {
+        $(".poruka").removeClass("nije-vidljiva-poruka");
+        $(".barCode").val(barcode);
+    }
+
+        $(document).ready(function () {
+
+            //ako je barkod polje popunjeno, isprazni ga
+            const bc = $("#barcode");
+            if (bc.val() != "") {
+                bc.val("");
+            }
+            //loguj-se klik: proveri dal je unet barkod,ako jeste prosledi ga na proveru. Ako je OK prikazi dialog form inace prosledjenu poruku
+            $('.loguj-se').click(function () {
+                confirmForm = {
+                    bCode: bc.val()
+                };
+
+                if (confirmForm.bCode == "") {
+                    $("#confirmForm").after('<p class="rezultat"><span>Nema barkoda</span></p>');
+                    setTimeout(function () {
+                        $(".rezultat").remove();
+                    }, 2000);
+                }
+                else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckBarcodeFormat","WaterResistance")',
+                        data: confirmForm,
+                        dataType: 'json'
+                    }).done(function (result)
+                        {
+                            if (result == 'Format OK') {
+                                ShowDialogForm(confirmForm.bCode);
+                            }
+                            else {
+                                $("#confirmForm").after(`<p class="rezultat"><span>${result}</span></p>`);
+                                setTimeout(function () {
+                                    $(".rezultat").remove();
+                                }, 2000);
+                            }
+                        });
+                }
+
+
+            });
+
+            $(".okButton").click(function () {
+
+                var formD = {
+                    barcodeForwarded: $(".barCode").val(),
+                };
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("TestSubmitOK","WaterResistance")',
+                        data: formD,
+                        dataType: "json"
+                    })
+                        .done(function (result) {
+
+                            $(".poruka").addClass("nije-vidljiva-poruka");
+                            if (bc.val() != "") {
+                                bc.val("");
+                            }
+
+                            if (result != "Uspešno sačuvan test.") {
+                                $("#confirmForm").after(`<p class="rezultat"><span>${result}</span></p>`);
+                                setTimeout(function () {
+                                    $(".rezultat").remove();
+                                }, 2000);
+                            }
+
+                    })
+
+            });
+        });
+
+</script>
+}
+

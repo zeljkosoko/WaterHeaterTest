@@ -1,0 +1,80 @@
+﻿@model dynamic
+
+<div class="logovanje">
+    <form asp-action="VisualErrorSubmit" method="post" class="d-flex flex-wrap flex-column p-3">
+        <input type="hidden" id="barCode" class="barCode" name="serialNo" value="@Model.barCode" />
+        <input type="hidden" id="sveSlike" name="sveSlike" />
+        <select class="errorType mb-1" id="errorType" name="errId">
+            @foreach (var item in Model.visualErrors)
+            {
+                <option value="@item.GetType().GetProperty("Id").GetValue(item)"
+                        data-type="@item.GetType().GetProperty("Tip").GetValue(item)">
+                    @item.GetType().GetProperty("Naziv").GetValue(item)
+                </option>
+            }
+        </select>
+
+        <input type="text" id="description" style="display:none;" class="description" name="desc" placeholder="Opis.." />
+        <textarea placeholder="Komentar.." style="display:none;resize:none;" id="comment" class="comment" name="comm"></textarea>
+        @* region webcam *@
+        <div id="LiveCamera" class="row" style="display:none;"></div>
+        <div id="results" class="d-flex flex-wrap flex-row justify-content-start mb-1"></div>
+        <input type="button" class="btn btn-primary slikajBtn mb-1" value="SLIKAJ" onClick="CaptureSnapshot()">
+        @* endregion webcam *@
+        <input type="submit" id="detaljiPotvrdi" value="POTVRDI" class="btn btn-danger" />
+        <p class="create-ticket-result text-center"><span>@ViewBag.Message</span></p>
+    </form>
+</div>
+
+<script src="~/webcamjs/webcam.js"></script>
+<script language="JavaScript">
+
+    Webcam.set({
+        force_flash: true,
+        width: 160,
+        height: 120,
+        image_format: 'png',
+        jpeg_quality: 100
+    });
+    Webcam.attach('#LiveCamera');
+
+    function CaptureSnapshot() {
+        var counter = 0, pictures = [];
+
+        Webcam.snap(function (data) {
+
+            document.getElementById('results').innerHTML +=
+                '<img id="imagePrev" src="' + data + ' " style="width:140px;height:120px;margin-right:5px;margin-top:5px;"/>';
+            var currentpictureNode = document.querySelectorAll("#imagePrev")[counter];
+            var picValue = currentpictureNode.getAttribute("src");
+            pictures.push("slika" + picValue); //added "slika" for splitting whole image string into particular image strings
+            $("#sveSlike").val(pictures);
+            counter++;
+            if (counter == 3) {
+                $(".slikajBtn").prop("disabled", "true");
+            }
+        });
+    }
+</script>
+
+@section Scripts {
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('.errorType').change(function () {
+                if ($(this).find(':selected').data('type') != 1) {
+                    $('#description').css('display', 'block');
+                    $("#comment").css('display', 'block');
+                }
+                else {
+                    $('#description').css('display', 'none');
+                    $("#comment").css('display', 'none');
+                }
+            });
+
+        });
+
+    </script>
+}

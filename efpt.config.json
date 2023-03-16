@@ -1,0 +1,69 @@
+﻿{
+   "CodeGenerationMode": 1,
+   "ContextClassName": "PZIPPContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "WaterHeaterTest",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[Agr_SifraKotao_SarzaKotao]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Agr_VrstaProblema_Opis]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Akt_Vodootpornost_Kotao]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sif_Artikal]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sif_Kotao]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sif_Sarza_Kotao]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sif_Serijski_Broj_Kotao]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sif_Vrsta_Problema]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "192.168.88.12/PZIPP",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
